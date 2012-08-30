@@ -20,11 +20,13 @@ It is arguable that simply looking at the code for these pages defeats the purpo
 	<ul>
 	<li>Identifying how to create a "menu bar" with Framesets, (Targets, etc.)
 	</ul>
+</li>
 <li>Ordered and unordered lists (meta LOL)
-<li>Comments in HTML
+<li>Comments in HTML</li>
 <!-- I find the syntax for comments to be rather odd 
 Maybe that's because I've gotten too used to c-like languages
 --> 
+<li>Realizing that the pre tag itself causes text to appear as code</li>
 </ol>
 
 </body>
