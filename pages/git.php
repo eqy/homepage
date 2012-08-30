@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>git</title>
+<title>Git Notes</title>
 </head>
 
 <body>
@@ -24,7 +24,41 @@ git init --bare
 <h5>I give up for now (incomplete)</h5>
 </p>
 <h4>In GNU/Linux</h4>
+<p>
+Follow the guide on <a href="https://help.github.com/articles/generating-ssh-keys">github</a> to generate ssh keys.
+Use <tt><pre>
+ssh keygen -t rsa -C "youremail@youremail.com"
+</tt></pre>
+Then add the key to github and use
+<tt><pre>
+ssh-add /path/to/key
+</tt></pre>
+to associate the key correctly on the local end.
+</p>
+
+<h4>Examples of git usage</h4>
+<p>
+Adding a remote repository:
+<pre>
+<tt>
+git remote add [name] https://github.com/username/name.git
+</tt>
+Comitting:
+<tt>
+git commit -m 'message/comment'
+</tt>
+Pushing:
+<tt>
+git push [repo] [branch]
+</tt>
+Pulling:
+git [options] [repo] [branch]
+</pre>
+
+
+</p>
 
 
 
 </body>
+</html>
