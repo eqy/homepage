@@ -41,7 +41,7 @@ Adding a remote repository:
 <pre>
 git remote add [name] https://github.com/username/name.git
 </pre>
-Omitting:
+Comitting:
 <pre>
 git commit -m 'message/comment'
 </pre>
