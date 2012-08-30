@@ -19,8 +19,7 @@ git init --bare
 <h3>Creating and accessing a git repo</h3>
 <h4>In Windows, with PuTTY</h4>
 <p>Generate a key with PuTTY key generator and configure the git repository accordingly.
-
-<br />
+</p>
 <h5>I give up for now (incomplete)</h5>
 </p>
 <h4>In GNU/Linux</h4>
@@ -40,19 +39,20 @@ to associate the key correctly on the local end.
 <p>
 Adding a remote repository:
 <pre>
-<tt>
 git remote add [name] https://github.com/username/name.git
-</tt>
-Comitting:
-<tt>
+</pre>
+Omitting:
+<pre>
 git commit -m 'message/comment'
-</tt>
+</pre>
 Pushing:
-<tt>
+<pre>
 git push [repo] [branch]
-</tt>
+</pre>
 Pulling:
+<pre>
 git [options] [repo] [branch]
+</pre>
 </pre>
 
 
