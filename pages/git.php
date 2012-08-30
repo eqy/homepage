@@ -11,52 +11,46 @@
 Git is a package present in the default Ubuntu repositories.
 <br />
 Initialize an empty repository with:
-<tt><pre>
-git init --bare
-</tt></pre>
 </p>
+<pre>
+git init --bare
+</pre>
 
 <h3>Creating and accessing a git repo</h3>
 <h4>In Windows, with PuTTY</h4>
 <p>Generate a key with PuTTY key generator and configure the git repository accordingly.
 </p>
 <h5>I give up for now (incomplete)</h5>
-</p>
 <h4>In GNU/Linux</h4>
 <p>
 Follow the guide on <a href="https://help.github.com/articles/generating-ssh-keys">github</a> to generate ssh keys.
-Use <tt><pre>
+Use</p> <pre>
 ssh keygen -t rsa -C "youremail@youremail.com"
-</tt></pre>
-Then add the key to github and use
-<tt><pre>
+</pre>
+<p>Then add the key to github and use</p>
+<pre>
 ssh-add /path/to/key
-</tt></pre>
-to associate the key correctly on the local end.
-</p>
+</pre>
+<p>to associate the key correctly on the local end.</p>
 
 <h4>Examples of git usage</h4>
 <p>
-Adding a remote repository:
+Adding a remote repository:<p>
 <pre>
 git remote add [name] https://github.com/username/name.git
 </pre>
-Comitting:
+<p>Comitting:<p>
 <pre>
-git commit -m 'message/comment'
+<p>git commit -m 'message/comment'</p>
 </pre>
-Pushing:
+<p>Pushing:</p>
 <pre>
 git push [repo] [branch]
 </pre>
-Pulling:
+<p>Pulling:</p>
 <pre>
 git [options] [repo] [branch]
 </pre>
-</pre>
-
-
-</p>
 
 
 
