@@ -15,9 +15,10 @@ padding:0;
 <li><a href="main.php" target="dynamic">Main</a></li>
 <li><a href="webserver.php" target="dynamic">Webserver (The very first page!)</a></li>
 <li><a href="pages/hardware.php" target="dynamic">Hardware</a></li>
-<li><a href="pages/git.php" target="dynamic">Git</a><li>
+<li><a href="pages/gnulinux.php" target="dynamic">GNU/Linux Notes</a><li>
+<li><a href="pages/git.php" target="dynamic">Git Notes</a><li>
 <li><a href="pages/cplusplus.php" target="dynamic">C++ Reminders</a></li>
-<li><a href="pages/html.php" target="dynamic">HTML</a></li>
+<li><a href="pages/html.php" target="dynamic">HTML Notes</a></li>
 
 </ul>
 </body>
