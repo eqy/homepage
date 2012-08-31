@@ -18,7 +18,11 @@
 			</h5>
 		<h6>Multiple Monitors</h6>
 			<p>Using xrandr seems to work nicely:</p>
-		<pre>xrandr --output [OutputOfMonitor] --[position]-of [OutputOfReferenceMonitor]</pre>
+		<tt>xrandr --output [OutputOfMonitor] --[position]-of [OutputOfReferenceMonitor]</tt>
+		<h6>Changing Windows Betweeen Floating and Tiled States</h6>
+		<tt>[MOD]-[Shift]-[Space]</tt>
+		<h6>Changing Windows "To/From Master Area" (you'll see why this is useful in practice</h6>
+		<tt>[MOD]-[Return/Enter]</tt>
 	
 	<h3>Ubuntu</h3>
 		<h4>Changing default file manager</h4>
