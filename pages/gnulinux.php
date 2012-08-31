@@ -39,6 +39,12 @@
 				exo-preferred-applications
 			</tt>
 		</p>
+		<h4>Getting icons in pcmanfm</h4>
+		<p>Install an icon set, such as "oxygen" with
+			<br /><tt>sudo apt-get install oxygen-icon-theme</tt> <br />
+		Create a file at ~/.gtkrc-2.0 with the contents <br />
+				<tt>gtk-icon-theme-name = "oxygen"</tt>
+		</p>
 
 </body>
 
