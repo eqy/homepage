@@ -70,7 +70,7 @@
 		</p>
 		<h4>Installing deadbeef (ostensibly the best foobar2000 alternative)</h4>
 		<p>You have to add another repo to install deadbeef... confused as to why this isn't in the official repositories.</p>
-		<pre>sudo add-apt-repository ppa:alexey:smirnov/deadbeef
+		<pre>sudo add-apt-repository ppa:alexey-smirnov/deadbeef
 sudo apt-get update
 sudo apt-get install deadbeef</pre>
 
