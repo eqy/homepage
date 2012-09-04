@@ -23,7 +23,26 @@
 		<tt>[MOD]-[Shift]-[Space]</tt>
 		<h6>Changing Windows "To/From Master Area" (you'll see why this is useful in practice</h6>
 		<tt>[MOD]-[Return/Enter]</tt>
-	
+
+		<h4>Xbindkeys and T420</h4>
+		<p>This is just to get the volume buttons to work correctly:</p>
+		<p>Install xbindkeys and write the following to ~/.xbindkeysrc</p>
+		<pre># Increase volume
+"amixer set Master playback 1+"
+    m:0x0 + c:123
+    XF86AudioRaiseVolume
+
+# Decrease volume
+"amixer set Master playback 1-"
+    m:0x0 + c:122
+    XF86AudioLowerVolume
+
+# Toggle mute
+"amixer set Master toggle"
+    m:0x0 + c:121
+    XF86AudioMute
+		</pre>
+		<!-- Ugly formatting here, we'll see how it shows up as a page lol -->	
 	<h3>Ubuntu</h3>
 		<h4>Changing default file manager</h4>
 		<p>This is important for issues such as nautilus being used in firefox when firefox is running in window manager that does not play nice with the idiotic feature of having to have a "desktop"
