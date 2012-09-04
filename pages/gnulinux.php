@@ -68,6 +68,11 @@
 		Create a file at ~/.gtkrc-2.0 with the contents <br />
 				<tt>gtk-icon-theme-name = "oxygen"</tt>
 		</p>
+		<h4>Installing deadbeef (ostensibly the best foobar2000 alternative)</h4>
+		<p>You have to add another repo to install deadbeef... confused as to why this isn't in the official repositories.</p>
+		<pre>sudo add-apt-repository ppa:alexey:smirnov/deadbeef
+sudo apt-get update
+sudo apt-get install deadbeef</pre>
 
 </body>
 
