@@ -8,7 +8,7 @@
 <body>
 	<h2>GNU/Linux Notes</h2>
 		<h6>This page created on August 30, 2012</h6>
-		<h6>Last updated August 30, 2012</h6>
+		<h6>Last updated September 16, 2012</h6>
 	
 	<h3>General</h3>
 	
@@ -74,6 +74,19 @@
 sudo apt-get update
 sudo apt-get install deadbeef</pre>
 
+		<h4>Configuration of .xinitrc (contains things as xsetroot for battery info, date, time, etc. as well)</h4>
+<tt>#!/bin/sh
+
+xbindkeys &
+sh ~/.fehbg &
+unclutter &
+xscreensaver -nosplash  &
+while true; do
+	xsetroot -name "$(acpi -b) | $(date +"%A"), $(date +"%B") $(date +"%d") $(date +%Y) $(date +"%R")"
+	sleep 1m
+done &
+exec dwm
+</tt>
 </body>
 
 
