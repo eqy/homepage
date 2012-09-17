@@ -75,7 +75,7 @@ sudo apt-get update
 sudo apt-get install deadbeef</pre>
 
 		<h4>Configuration of .xinitrc (contains things as xsetroot for battery info, date, time, etc. as well)</h4>
-<tt>#!/bin/sh
+<pf>#!/bin/sh
 
 xbindkeys &
 sh ~/.fehbg &
@@ -86,7 +86,7 @@ while true; do
 	sleep 1m
 done &
 exec dwm
-</tt>
+</pf>
 </body>
 
 
