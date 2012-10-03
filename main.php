@@ -9,6 +9,7 @@
 <p>
 This website is hosted on questionable computer hardware with possibly even more questionable network hardware and resources. It is intended as a sort of glorified sandbox while possibly maintaining some semblance of practicality--the practicality being in maintaining some loose documentation of my exploration of technology (as vague as that sounds).
 
+Note: If you are the domain you are on looks something like linux.ucla.edu, then the hardware and network resources are somewhat less questionable. (See the Webserver page for more details)
 </p>
 
 <h2>Anticipations</h2>
