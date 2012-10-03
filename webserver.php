@@ -13,6 +13,10 @@
 A nice way to start things off would be to document the creation of the webserver itself. It started off in August 2006 as an ambitious DIY build with modest funds. Originally packed with a blazing AMD Athlon 64 X2 4200+ (Windsor), 1GB of DDR 2 533 memory, and a powerful PNY Nvidia Geforce 7600GT, time has brought some changes to the system. The 7600GT was sold for a textbook and the integrated graphics (Geforce 6150) of the motherboad (ASUS M2NPV-VM) serve as the replacement. Unfortunately, due to the lack of onboard memory for integrated graphics, the switch brings total system memory down to ~930MB. 
 </p>
 
+<p>
+If the domain you are currently at looks something like linux.ucla.edu then these pages are hosted on an AMD Opteron 8216 machine operated by the LUG (Linux Users Group) @ UCLA.
+</p>
+
 <h3>The actual web-part</h3>
 
 <p>
