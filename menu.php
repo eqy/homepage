@@ -19,7 +19,7 @@ padding:0;
 <li><a href="pages/git.php" target="dynamic">Git Notes</a><li>
 <li><a href="pages/cplusplus.php" target="dynamic">C++ Reminders</a></li>
 <li><a href="pages/html.php" target="dynamic">HTML Notes</a></li>
-
+<li><a href="pages/sounds.html" target="dynamic">Sounds that I enjoy</a><li>
 </ul>
 </body>
 </html>
