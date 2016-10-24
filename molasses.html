@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>molasses</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<h2>Molasses <a href="https://github.com/eqy/molasses">(github)</a></h2>
+<h3>
+Searching through 120,000 music modules to find that elusive uncredited video
+soundtrack.
+</h3>
+
+<a href="https://www.youtube.com/watch?v=8MkqQ8N0UKA">click here</a> for a lame
+demo video featuring unsynchronized audio.
+
+<p>Popular services like Shazam and Midomi have made music identification
+easy, provided that you're trying to find a song in their database. But what
+happens when the song you're searching for isn't in their database--when you
+know for certain that it won't be in their database?
+</p>
+
+<h4>2005-2006: Motivation: Uncredited Tom's Hardware Video Soundtracks</h4>
+<p>Usually you're just SOL and hope that some hero comments on the video you
+just watched with something other than "Song Name: <a
+href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Darude - Sandstorm</a>". In
+2005-2006, I stumbled upon a set of videos produced by Tom's Hardware. As a
+newbie-PC builder at the time I was interested by their content; who doesn't
+want to see a <a href="https://www.youtube.com/watch?v=BAVGs9FbmnM">Pentium 4
+overclocked to 5GHz under LN2</a>, a PC <a
+href="https://www.youtube.com/watch?v=qZ8L1Prl6tk">cooled with vegetable
+oil</a>, or what happens (before throttling and shutdown became ubiquitous) when
+you <a href="https://www.youtube.com/watch?v=NxNUK3U73SI">removed the heatsink
+on a running processor</a>.
+</p>
+
+<p>
+I was also entranced by the music used in these videos. I had never heard
+anything quite like it as someone who only experienced the days of the Amiga--I
+only knew the world of sampled mp3s and wavs. The closest thing I had ever heard
+to a music module was a midi played back using whatever terrible sample library
+shipped with Windows XP by default.
+</p>
+
+<small>
+<small>
+If you're looking for the soundtracks for these two videos, they can be found here:
+<a href="https://www.youtube.com/watch?v=n-CnsQ4BqfY">Anvil - Path to Nowhere</a>
+<a href="https://www.youtube.com/watch?v=x4luaY7Oc24">Karsen - Aryx</a>
+<a href="https://www.youtube.com/watch?v=pNLSa2CdpXk">Acecream - Love Me!</a>
+<a
+href="http://modarchive.org/index.php?request=view_by_moduleid&amp;query=46358">Blue
+Ion - Fifth</a>
+<a href="https://www.youtube.com/watch?v=WpcO2yMxO3U">Project X</a>
+
+</small>
+</small>
+
+
+
+<p>
+As the soundtracks were never credited in the videos (I wasn't even on YouTube
+at the time to even begin checking the comments there), I gave up hope of
+tracking down the music. 
+</p>
+
+<h4>2007-2008: Discovering "Keygen" Music</h4>
+<p>
+A few years later, after I had discovered the genre of "keygen music," a term
+that is itself really just a bootleg for module or tracker music, I downloaded a
+"keygen music pack" that contained the song <a
+href="https://www.youtube.com/watch?v=31TkIDcmTRA">Reed - Dansze Mucyka</a>. I
+recognized it immediately as the source for <a
+href="https://www.youtube.com/watch?v=3oLQqBjU9eY">this</a> Tom's Hardware
+video. I now knew that this type of music existed originally in the form of
+module formats, but I was stuck with the misconception that "keygen" music packs
+were the primary source of tracker music. The fact that "keygen" music often
+came mislabeled (labeled based on the keygen they were ripped from and not the
+actual composer) didn't help and I didn't find of the other tracks.
+</p>
+
+<h4>2013-2014: YouTube comment heroes, getting 90% of the way there</h4>
+<p>
+Fast forward another few years, and on a whim I decided to visit those old Tom's
+Hardware videos on YouTube just for fun. This time, however, most of the videos
+had comments detailing where the modules used for the soundtracks came from, and
+some quick googling revealed <a href="http://modarchive.org">the modarchive</a>
+to be the definitive source for modules. Eventually, I discovered that the vast
+majority of songs used in Tom's Hardware videos were shamelessly ripped from the
+<a href="http://modarchive.org/index.php?request=view_chart&query=featured">list
+of featured modules</a> on the modarchive, with the time the module was featured
+roughly corresponding to the release date of the videos. This list should have
+been the last piece in the puzzle to getting the soundtracks to all of the
+videos, but unfortunately there was a big black hole circa 2004-2005 where the
+featured module list was not updated. Soundtracks for videos such as the <a
+href="https://www.youtube.com/watch?v=N1hg1zf7rrY"> Intel Pentium 560 Heat
+Problems</a> would remain unidentified. 
+</p>
+
+<h4>2015: New Possibilities</h4>
+<p>
+On the surface, simply knowing that a song came from a tracker music file
+doesn't seem to be a whole lot of useful information. I didn't think it told me
+anything obvious other than that a Shazam or Midomi search wouldn't work.
+However, if you look a little deeper, a few factors come together that make a
+ridiculous project like Molasses possible. They are:
+</p>
+<ul>
+<li><b>A Smaller and Mostly Mapped Universe.</b>
+There aren't actually that many tracker music files out there. The entire
+snapshot of the modarchive up to 2007 (which is presumably reasonably
+exhaustive), <i>only</i> contains ~120,000 songs. 
+</li>
+<li><b>Modules are Pretty Small and not Projected by the RIAA.</b>
+The <b>entire</b> archive is <i>freely</i> available in compressed form as a torrent <a
+href="http://tracker.modarchive.org/">on the modarchive tracker page</a>. Size?
+<b>~29GiB</b>. Imagine how much space 120,000 mp3s would take up, even at a low
+bitrate of 128kbps.
+</li>
+</ul>
+
+<h3>Molasses: Implementation</h3>
+<p>
+Molasses was born out of these possibilities, but the ease of availability of
+projects such as <a href="https://github.com/worldveil/dejavu">dejavu</a> were
+what really made things doable. It turns out that storing the fingerprints of
+120,000 songs in a mysql database (as dejavu is implemented) isn't exactly
+feasible for a single user (estimated 500GiB to 1TiB needed), especially if I
+only intend on performing a few searches. Instead of fingerprinting the target
+song and matching it against an index of pre-fingerprinted songs, molasses
+fingerprints everything on the fly to save disk space. 
+</p>
+
+<p>
+<a
+href="http://willdrevo.com/fingerprinting-and-audio-recognition-with-python/">The
+FFT-based fingerprinting algorithm used in </a>dejavu works well with tracker
+music, so long as the modules are converted to a sampled format beforehand. This is
+"easily" done with gstreamer-based tools such as soundconverter. Ostensibly, all
+that needed to be done was convert 120,000 modules to wav via soundconverter,
+fingerpint them, and finally match them.
+</p>
+
+<h4>soundconverter bugs</h4>
+<p>
+Unfortunately, some of the songs in the mod archive seem to induce nasty and
+unrecoverable bugs in soundconverter. Most of them seem to be reasonably begign,
+causing soundconverter to hang and produce a 0-byte wav file. I just hoped that
+the song I was looking for didn't happen to be one of these "buggy" modules.
+However, sometimes, a buggy module produces the opposite behavior, where
+soundconverter will just continue writing garbage to a wav file, sometimes in
+excess of 10GiB. With 120,000 total modules, garbage wav files will eat a hard
+disk quickly if unchecked. In the end, I "remedied" these problems with a simple
+timeout counter for the soundconverter subprocess and by deleting wav files once
+they are fingerprinted.
+</p>
+
+<h4>performance</h4>
+<p>
+As you can imagine, trying to match a song against 120,000 candidates takes a
+long time, and this is where Molasses gets its name. However, it doesn't take
+<i>that</i> long, and modules can be fingerprinted at roughly 10X real-time speed on a
+fairly modern multicore CPU (molasses uses the multiprocess module for parallel
+processing). All in all, it takes on the order of a few days to
+fingerprint the entire 2007 snapshot.
+</p>
+
+<p>Even if a few days sounds like a long time, it's nothing compared to the
+first implementation of Molasses, which is on the order of <b>40X</b> slower
+than the version that was eventually used to search the mod archive.
+</p>
+
+<p><b>The first 10X performance improvement</b> was reached by using a non-totally naive
+data-structures for matching fingerprints of songs. Each song produces hundreds
+of thousands of fingerprint-time pairs, which are then compared with
+other songs. Comparing two songs (a, b) involves checking if song b has a
+matching fingerprint with song a for every fingerprint in song a, and storing
+the offset between the fingerprint times for each song if there is a match.
+Naively, if fingerprint-time pairs are store in flat lists or arrays, comparing
+songs is an O(n²) operation. Storing things as maps from fingerprints->lists of
+times changes this to an "O(1)."
+</p>
+
+<p><b>The second 4X* performance improvement</b> was reached by using
+parallel processing via the multiprocessing module. Making things
+multiprocessing-friendly was relatively straightforward, all that had to be
+done was a quick hack to pack the state of an object so that it could be handled
+by a function acceptable by Pool.map(). 
+</p>
+
+<small>
+<small>
+*depends on how many cores/threads your hardware supports
+</small>
+</small>
+
+<p>
+Eventually, I found the <a
+href="http://modarchive.org/index.php?request=view_by_moduleid&amp;query=40309">song</a>.
+</p>
+</html>
+

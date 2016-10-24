@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>triperino_cl</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<h2>triperino_cl <a href="https://github.com/eqy/triperino_cl">(github)</a> </h2>
+<a href='images/triperino_cl.png'><img title='triperino_cl'
+src='images/triperino_cl.png' width='650'></a>
+
+<p>
+triperino_cl is essentialy a direct port of crypt(3) or the FreeSec
+implementation of DES to OpenCL for GPGPU acceleration. Ostensibly, it's a
+tripcode brute-forcer, though I'll justify its lackluster performance by saying
+it's mostly just for fun.
+
+Current performance is around 14 million tripcodes per second on a reference
+Nvidia GTX 660 GPU.
+</p>
+
+<p>
+As is, the FreeSec implementation of DES appears to be quite inefficient. I
+tested a naive implementation of Tripcode Explorer-like program based on this
+implementation of DES. It only yielded around 180 thousand tripcodes per second
+per thread on an Intel i5-2520M, where the expected performance under SSE2
+acceleration with Tripcode Explorer would be 2+ million tripcodes per second.
+</p>
+
+<p>
+However, the simplicity of the FreeSec implementation makes it easy to port to
+OpenCL. It relies on essentially no outside libraries--as compared to say DES
+fcrypt and is easier for a complete DES-newbie like me to understand than some
+bitslice versions of DES.
+</p>
+
+<h4>The Porting Process</h4>
+<p>The FreeSec implementation is largely lookup table based (this is also
+important when talking about performance on GPUs). The issue is that these
+lookup tables are mostly two-dimensional, and two-dimensional arrays are not
+supported out of the box in OpenCL kernels as global memory. To solve this
+issue, the first step of the ported implementation is to flatten each of the
+two-dimensional lookup tables before copying them to device memory.
+</p>
+<p>
+The rest of the porting process was more mechanical and mainly involved adapting
+data types to their OpenCL counterparts. For example, <code>u_char</code> becomes
+<code>uchar</code> and <code>uint32_t</code> becomes <code>uint</code> and so on.
+Other changes included breaking up structs into their individual fields to make
+passing things around easier within the kernel.
+</p>
+<p>
+Each OpenCL work-item brute forces a pre-determined number of passwords, say 256
+or 512. If it finds a match, it writes the password and corresponding tripcode
+to preallocated regions of global memory. There is a bit of cheating in this
+last step; it is explained in detail under Performance Optimization.
+</p>
+
+<h4>Performance Optimizations</h4>
+So begins the fun part. 
+<h4>Random Password Generation</h4>
+The first performance optimizations took place before
+the first time I ran the code on the GPU to do reasonably efficient random
+number generation.  As it's pretty tough (is it even possible?) to run code from
+outside libraries in OpenCL, the code for generating random numbers and
+subsequently passwords quickly is done with an XORshift algorithm--shamelessly
+lifted directly from the <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift Wikipedia Article</a>.
+<h4>Lookup Table (LUT)</h4>
+<p>
+LUTs are notoriously terrible for GPGPU performance, as described in <a
+href="https://software.intel.com/en-us/articles/accelerate-performance-using-opencl-with-intel-hd-graphics#_Toc357619018">this</a>
+Intel OpenCL article. The main issue is that LUTs are by definition
+memory access-bound, whereas GPGPU programs really, really like to only be
+compute bound. My initial hope was that the magic of thread scheduling could
+alleviate some of these issues by hiding latency, but nonetheless having a bunch
+of LUTs sitting in low-bandwith global memory on a GPU means your work-items are
+going to be bogged down trying to read memory most of the time. This issue was
+reflected early on in the performance figures, with 1-2 million tripcodes per
+second being the initial performance on a GTX 660. That's slower than the
+singlethreaded performance on an i5-2520M!
+<p>
+The Intel article provides a reasonable workaround for when LUTs are absolutely
+necessary, or when the programmer is too lazy to use another algorithm: try to
+stuff the LUTs into local memory on a GPU. Local memory on GPUs is quite small--
+usually something like 16, 32, 48, or 64 KiB, but like L1 cache on a CPU, it's
+much, much faster than main/global device memory. Luckily, the most heavily
+abused LUTs in the FreeSec implementation, <code>m_sbox</code>, and <code>psbox</code>,
+will fit in 32KiB. As the GTX 660 has around 48 KiB of local memory per
+workgroup, I was in business. This single change yielded a <b>10X</b>
+improvement in performance, the throughput from around 1 million to 10+ million
+tripcodes per second.
+</p>
+<h4>Tuning <code>global_work_size</code> and <code>local_work_size</code></h4>
+<p>
+Every OpenCL-capable device is different, and this is one of the more device
+specific optimizations you can do. Basically I just tried a bunch of various
+global worksizes (make sure that your local worksize) evenly divides this value
+for best performance. I left the local worksize up to the OpenCL runtime by
+passing a <code>NULL</code> pointer for the local worksize when firing up the
+kernel as I found this to yield the best performance. However, there are some
+issues with playing around with these values--see Gotchas. Tuning these values
+got performance from 10 million to around 13 million tripcodes per second.
+</p>
+
+<h4>Cheating by Allocating and Copying Less Memory than May be Needed</h4>
+<p>
+The last major performance optimization was to recognize that most passwords do
+not yield a matching tripcode, especially as the search string grows. It's not
+unreasonable to assume that fewer than one in 256 or one in 1024 randomly
+guessed passwords will generate a matching tripcode. triperino_cl exploits this
+property by only allocating enough space for a single password/tripcode pair (~20
+bytes total) for each work-item despite the fact that each work-item tries many
+more passwords. Cutting back on the memory allocated and by extension the amount
+that eventually gets copied back to the host to read the found passwords and
+tripcodes brings performance from 13 to 14 million tripcodes per second.
+</p>
+
+<h4>Where does triperino_cl fit in performance-wise?</h4>
+<p>
+I'm fairly satisfied with this few-days-long hack. 14 million tripcodes per
+second is on par with the multithreaded and SSE2 accelerated version of Tripcode
+Explorer running on an i5-3570K. I guess a ~1 billion transistor count dvantage
+(for the GTX 660) makes up for a poor choice of algorithm implementation.
+</p>
+<p>
+There has been previous work on GPU-accelerated DES brute force cracking--with
+some implementations on AMD GPUs achieving <a href="http://harry.lu/mty/">40+
+million tripcodes per second.</a> An optimized bitslice implementation for the
+PS3's cell processor yielded <a
+href="http://www.zorinaq.com/talks/breaking-unix-crypt.pdf">11.5 million
+passwords per second.</a>
+</p>
+
+<h4>Epilogue: C and OpenCL Gotchas</h4>
+<p>
+It's always fun to document the various stupid or frustrating (or both) bugs that
+I run into whenever I'm working with a language such as C that requires you to
+manage your own memory. Here are some of the more memorable ones. I describe
+them in no particular order.  </p>
+<h4>What's a Pointer to an Array?</h4>
+<p>
+For some reason, compiling an OpenCL kernel from source requires you to pass a
+pointer to a pointer (<code>char **</code>) to a character array containing the
+source code to the kernel. However, I forgot that writing something like
+<code>&amp;my_array</code> where <code>my_array</code> is a character array is equivalent to
+writing <code>&amp;my_array[0]</code>. It's actually not possible to get the address of
+a pointer to the pointer to the first element of a statically allocated array in
+C unless you do a dumb workaround like creating another pointer and setting that
+to <code>my_array[0]</code> and then using the address of the other pointer. In my
+code, that looks something like:
+</p>
+<pre>
+const char *kernel_loc = (const char *) triperino_kernel_cl;
+size_t kernel_len = triperino_kernel_cl_len;
+triperino_program = clCreateProgramWithSource(context, 1,\
+(const char **) &amp;kernel_loc, &amp;kernel_len, &amp;status);
+assert(!status);
+</pre>
+<p>
+Very ugly, indeed, but it was a relief to figure out the reason why compiling the
+kernel was causing a segfault.
+</p>
+<h4>No Work Done</h4>
+<p>
+For a while running my kernel did absolutely nothing. The source of my problem
+turned out to be passing <code>global_worksize[1]</code> instead of
+<code>global_worksize[0]</code>, which for some reason had the value '0' even though
+<code>global_worksize</code> was only allocated as a single-entry array. 
+</p>
+<h4>Printing a char</h4>
+<p>
+Another embarrassing mistake. Always remember to pass <code>char *</code>s to
+<code>printf</code>, not <code>char</code>.
+</p>
+<h4>Abusing Global Memory too Much</h4>
+<p>
+This was a fun one to debug--I was repurposing device memory as space to store
+parameters passed to the kernel. Unfortunately, the same device memory is used
+to store eventual password/tripcode combinations to be returned by the kernel.
+This conflict meant that some work-items would receive the correct
+parameters--but others, those that are scheduled to run later, have their
+parameters clobbered by the results of the earlier work-items.
+</p>
+<h4>Display Timeout??</h4>
+<p>
+According to word of mouth the Nvidia OpenCL implementation doesn't like it if
+you keep the GPU too busy for more than 5 seconds at a time if the GPU is also
+being used to drive a display. This led to a lot of time spent trying to find
+memory bugs when I was increasing the number of tripcodes each work-item would
+process, as OpenCL tends to throw the same status (-5 OUT OF RESOURCES) for a
+variety of wildly different problems.
+</p>
+<h4>wtf printf</h4>
+<p>
+Not everyone implements printf, and even if they do, not everyone does it
+<a
+href="http://stackoverflow.com/questions/31236738/opencl-race-condition-with-printf/31344808">
+according to your expectations</a>. It took me a while to realize that the
+reason my kernel build was failing was that printf is just not implemented by
+Nvidia.  </p>
+</html>

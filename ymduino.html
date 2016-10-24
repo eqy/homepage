@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>ymduino</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>ymduino <a href="https://github.com/eqy/ymduino/">(github)</a></h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rgmilIvut_4"
+ allowfullscreen></iframe>
+
+<p>ymduino was originally a project to implement an interface between the Yamaha
+YM2149 <a href="http://www.ym2149.com/ym2149.pdf">(datasheet)</a> and the Arduino Uno
+much like the once seen <a
+href="http://hackaday.com/2012/04/10/playing-chiptunes-with-a-ym2149-and-optimizing-an-arduino/">here</a>.
+It has since evolved to be a mostly "standalone" Atari ST chiptune player.  </p>
+
+
+<p>
+The project was originally stalled for a very long time: 2 years! I had hit a
+roadblock where I wasn't sending the signals to the sound chip correctly and
+thought I needed an oscilloscope to correctly diagnose the problem. After
+looking at the source code recently I figured out that the issue was caused by
+some <a href="#PORTD">poorly thought out manipulation of the <code>PORTD</code>
+register</a> and was able to get it working without an oscilloscope.
+</p>
+
+<h5>Early Prototype of ymduino Hardware</h5>
+<a href="images/prototype.jpg">
+<img title="Early Prototype of ymduino" alt="Early Prototype of ymduino" src="images/prototype.jpg" width=650>
+</a>
+
+<h5>Underside View of ymduino Perfboard</h5>
+<a href="images/perfboard.jpg">
+<img title="Underside View of ymduino perfboard" alt="Underside View of ymduino perfboard" src="images/perfboard.jpg"
+width=240>
+</a>
+
+<h4>Why the YM2149?</h4>
+<p>
+The YM2149 was one of the most common sound chips for home computers and video
+game systems in the 1980s--one of them being the Atari ST. However, the reason
+that I chose to use it in this project is that there exists a common chiptune
+format for it: <a href="http://leonard.oxg.free.fr/ymformat.html">YM</a>, which
+is fairly well documented and easy to use. The format is amenable to playback
+with and Arduino because in its raw, uncompressed form--it is just a dump of the
+16 (actually 14) registers of the YM2149 at 50 Hz. Fancier features, such as
+fast, carefully timed interrupts or other routines to produce more complex
+sounds are not needed to produce basic Atari ST music. By the way, 50 Hz happens
+to be the refresh rate for the PAL video standard; this is unsurprising given
+that in the 80s home computer design <a
+href="http://www.linusakesson.net/scene/craft/">often revolved around the timing
+of the video signal.</a>
+</p>
+
+<h4>Implementation: Getting the Arduino to Switch Quickly and Fixing a Nasty Bug</h4>
+<p>
+One of the issues noticed by Oryx in <a
+href="http://hackaday.com/2012/04/10/playing-chiptunes-with-a-ym2149-and-optimizing-an-arduino/">this</a>
+implementation of an Atari ST player was that using the standard
+<code>digitalWrite()</code> function of an Arduino to control the YM2149 was too
+slow. Specifically, the datasheet for the YM2149 states that the pins
+controlling the mode of the chip (read, write, address) must be switched within
+50ns of each other (this makes sense as the YM2149 is clocked at 2MHz). The chip
+will work if this timing requirement isn't met, but the music will sound
+increasingly distorted the further out of time the signals are sent. The fix is
+to use some lower level Arduino primitives--namely the PORTD registers to
+flip the bits quickly. 
+</p>
+<p>
+<a id="PORTD"></a>
+This was where I had messed up my implementation previously. I was setting the
+<code>PORTD</code> bits to hardcoded values such as 00001100 instead of realizing
+that I was also using some other pins controlled by the <code>PORTD</code> register
+to write data to the YM2149. The net result was the changing the operation mode
+of the chip also clobbered the register address/data I was trying to send to the
+YM2149.  Unfortunately, this problem was difficult to debug because addressing
+the YM2149 incorrectly just causes the chip to do nothing. The fix is to only
+manipulate the desired pins when using the <code>PORTD</code> register. For example,
+to only set the two least significant bits to 1, <code>PORTD |= 11000000</code>
+should be written instead of <code>PORTD = 11000000</code>. Likewise, to set bits
+low, a bitwise AND operation should be used: <code>PORTD &amp;= 00111111</code>.
+</p>
+
+
+<h4>Becoming "standalone"</h4>
+<p>
+This wasn't originally part of the project plan, but I figured it would be much
+cooler to have the board play music without needing a laptop tethered to it.
+It's "standalone" in quotes in the sense that it needs a laptop to dump .YM
+files to a raw, uncompressed format that is easily streamable by the Arduino,
+but otherwise just needs an AC adapter and a capable line-in jack.
+The SD card libraries for the Arduino made this part very simple once the
+SPI pins are hooked up.
+</p>
+<p>
+The total time needed for the Arduino to read 14 bytes of data off of a microSD
+card and ship it off to the YM2149 is well under 2000μs, so it's about 10X
+faster than the bare minimum needed to stream music.is well under 2000μs, so
+it's about 10X faster than the bare minimum needed to stream music.
+</p>
+
+<h4>Adding blinkenlights</h4>
+<p>
+A cool way to get a cheap music visualizer for free or without burning up too
+much computational on the Arduino is to dump the contents of one of the
+registers--say the fine pitch adjust value of one of the oscillators to a shift
+register that will drive a small array of LEDs. For around three pins and not
+much microcontroller time you get a somewhat interesting visuals.
+</p>
+
+<h4>What Parts Count?</h4>
+<p>
+The final parts count of the project is extremely low. Other than the Arduino
+and SD stuff--all that is added is the YM2149 itself, a 1K resistor for the
+output of the sound chip (common-collector amp??), the shift register, LEDs, and
+current limiting resistors for the LEDs. 
+</p>
+</body>
+</html>
