@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smarty McHomeFace</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<h2>Smarty McHomeFace <a href="https://github.com/eqy/SmartyMcHomeFace">(github)</a></h2>
+
+<table>
+<tr><td><img src="images/thermo_1.jpg"></td> <td><img src="images/thermo_2.jpg"> </td> </tr>
+</table>
+
+<h4>Overview</h4>
+<p>
+Smarty McHomeFace is an ongoing experiment in home automation using a <a
+href="https://www.raspberrypi.org/products/model-b-plus/">Raspberry Pi B+</a>.
+It currently presents a crude web-interface <a
+href="https://blog.cloudflare.com/say-cheese-a-snapshot-of-the-massive-ddos-attacks-coming-from-iot-cameras/">(not
+publicly accessible)</a> for heating controls. <s>I plan on adding schedules (maybe
+via <code>cron</code>)? eventually.</s> It supports heating schedules via a
+<a
+href="https://developers.google.com/google-apps/calendar/quickstart/python">Google
+Calendar API</a> hack. There are a few other <del>experimental</del>
+somewhat broken features that include playing a custom greeting sound when the
+Pi detects a specific device has connected to the LAN (usually happens when
+someone returns home) or when someone walks by a motion sensor. 
+</p>
+
+<h4>Thermostat</h4>
+The overall design is simple: the Raspberry Pi controls a pair of relays that
+switch the heat and fan.  On the software side, the web server is a crude
+amalgamation of hacks using the <a
+href="https://twistedmatrix.com/trac/wiki/WebDevelopmentWithTwisted"><code>twisted</code></a>
+web framework and <a href="https://pypi.python.org/pypi/RPi.GPIO">Python
+Raspberry Pi GPIO Library</a>. Specifically, hardware includes <a
+href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/overview">DS18B20
+(as explained on adafruit)</a> temperature sensor along with <a
+href="http://www.sainsmart.com/arduino-pro-mini.html">this pair of relays</a> to
+switch the heat and fan. I found a wiring diagram for the thermostat that was
+originally installed in the house by Googling the model number of the thermostat
+that was originally installed. After finding the wiring diagram I dangerously
+experimented with jumper wire to determine how to switch the heat and fan.
+<em>Attempt this at your own risk.</em> 
+
+<h4>Greeter</h4>
+The LAN greeting functionality is implemented using a Python wrapper for nmap.
+Greeting using the motion sensor is implemented using the <a
+href="https://gpiozero.readthedocs.io/en/v1.3.1/"><code>gpiozero</code></a>
+interface for the Pi. 
+</html>
